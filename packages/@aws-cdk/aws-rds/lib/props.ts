@@ -239,7 +239,7 @@ export abstract class Credentials {
    */
   public static fromSecret(secret: secretsmanager.ISecret, username?: string): Credentials {
     return {
-      username: username ?? secret.secretValueFromJson('username').toString(),
+      username: username ?? secret.secretValueFromJson('username').unsafeUnwrap(),
       password: secret.secretValueFromJson('password'),
       encryptionKey: secret.encryptionKey,
       secret,
@@ -356,7 +356,9 @@ export abstract class SnapshotCredentials {
    *
    * Note - The username must match the existing master username of the snapshot.
    *
-   * NOTE: use `fromGeneratedSecret()` for new Clusters and Instances.
+   * NOTE: use `fromGeneratedSecret()` for new Clusters and Instances. Switching from
+   * `fromGeneratedPassword()` to `fromGeneratedSecret()` for already deployed Clusters
+   * or Instances will update their master password.
    */
   public static fromGeneratedPassword(username: string, options: SnapshotCredentialsFromGeneratedPasswordOptions = {}): SnapshotCredentials {
     return {

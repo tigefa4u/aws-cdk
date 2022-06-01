@@ -15,7 +15,7 @@ describe('DatabaseCluster', () => {
     new DatabaseCluster(stack, 'Database', {
       masterUser: {
         username: 'admin',
-        password: cdk.SecretValue.plainText('tooshort'),
+        password: cdk.SecretValue.unsafePlainText('tooshort'),
       },
       instanceType: ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE2, ec2.InstanceSize.SMALL),
       vpc,
@@ -58,7 +58,7 @@ describe('DatabaseCluster', () => {
       instances: 1,
       masterUser: {
         username: 'admin',
-        password: cdk.SecretValue.plainText('tooshort'),
+        password: cdk.SecretValue.unsafePlainText('tooshort'),
       },
       instanceType: ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE2, ec2.InstanceSize.SMALL),
       vpc,
@@ -108,7 +108,7 @@ describe('DatabaseCluster', () => {
         vpc,
         instanceType: ec2.InstanceType.of(ec2.InstanceClass.R5, ec2.InstanceSize.LARGE),
         vpcSubnets: {
-          subnetType: ec2.SubnetType.PRIVATE,
+          subnetType: ec2.SubnetType.PRIVATE_WITH_NAT,
         },
       });
     }).toThrowError('Cluster requires at least 2 subnets, got 1');
@@ -150,7 +150,7 @@ describe('DatabaseCluster', () => {
       instances: 1,
       masterUser: {
         username: 'admin',
-        password: cdk.SecretValue.plainText('tooshort'),
+        password: cdk.SecretValue.unsafePlainText('tooshort'),
       },
       instanceType: ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE2, ec2.InstanceSize.SMALL),
       vpc,
@@ -203,7 +203,7 @@ describe('DatabaseCluster', () => {
     new DatabaseCluster(stack, 'Database', {
       masterUser: {
         username: 'admin',
-        password: cdk.SecretValue.plainText('tooshort'),
+        password: cdk.SecretValue.unsafePlainText('tooshort'),
       },
       instanceType: ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE2, ec2.InstanceSize.SMALL),
       vpc,
@@ -227,7 +227,7 @@ describe('DatabaseCluster', () => {
     new DatabaseCluster(stack, 'Database', {
       masterUser: {
         username: 'admin',
-        password: cdk.SecretValue.plainText('tooshort'),
+        password: cdk.SecretValue.unsafePlainText('tooshort'),
       },
       instanceType: ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE2, ec2.InstanceSize.SMALL),
       vpc,
@@ -774,7 +774,7 @@ describe('DatabaseCluster', () => {
     const cluster = new DatabaseCluster(stack, 'Database', {
       masterUser: {
         username: 'admin',
-        password: cdk.SecretValue.plainText('secret'),
+        password: cdk.SecretValue.unsafePlainText('secret'),
       },
       vpc,
       instanceType: ec2.InstanceType.of(ec2.InstanceClass.R5, ec2.InstanceSize.SMALL),
@@ -888,7 +888,7 @@ describe('DatabaseCluster', () => {
     const cluster = new DatabaseCluster(stack, 'Database', {
       masterUser: {
         username: 'admin',
-        password: cdk.SecretValue.plainText('secret'),
+        password: cdk.SecretValue.unsafePlainText('secret'),
       },
       vpc,
       instanceType: ec2.InstanceType.of(ec2.InstanceClass.R5, ec2.InstanceSize.SMALL),

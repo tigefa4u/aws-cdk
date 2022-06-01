@@ -1,4 +1,4 @@
-/// !cdk-integ pragma:ignore-assets
+/// !cdk-integ pragma:ignore-assets pragma:disable-update-workflow
 import * as path from 'path';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as iam from '@aws-cdk/aws-iam';
@@ -35,7 +35,7 @@ class EksClusterStack extends Stack {
       vpc: this.vpc,
       mastersRole,
       defaultCapacity: 2,
-      version: eks.KubernetesVersion.V1_22,
+      version: eks.KubernetesVersion.V1_21,
       secretsEncryptionKey,
       tags: {
         foo: 'bar',
@@ -79,6 +79,8 @@ class EksClusterStack extends Stack {
 
     this.assertServiceAccount();
 
+    this.assertExtendedServiceAccount();
+
     new CfnOutput(this, 'ClusterEndpoint', { value: this.cluster.clusterEndpoint });
     new CfnOutput(this, 'ClusterArn', { value: this.cluster.clusterArn });
     new CfnOutput(this, 'ClusterCertificateAuthorityData', { value: this.cluster.clusterCertificateAuthorityData });
@@ -90,6 +92,18 @@ class EksClusterStack extends Stack {
   private assertServiceAccount() {
     // add a service account connected to a IAM role
     this.cluster.addServiceAccount('MyServiceAccount');
+  }
+
+  private assertExtendedServiceAccount() {
+    // add a service account connected to a IAM role
+    this.cluster.addServiceAccount('MyExtendedServiceAccount', {
+      annotations: {
+        'eks.amazonaws.com/sts-regional-endpoints': 'false',
+      },
+      labels: {
+        'some-label': 'with-some-value',
+      },
+    });
   }
 
   private assertCreateNamespace() {
@@ -205,7 +219,7 @@ class EksClusterStack extends Stack {
     const lt = new ec2.CfnLaunchTemplate(this, 'LaunchTemplate', {
       launchTemplateData: {
         imageId: new eks.EksOptimizedImage({
-          kubernetesVersion: eks.KubernetesVersion.V1_22.version,
+          kubernetesVersion: eks.KubernetesVersion.V1_21.version,
         }).getImage(this).imageId,
         instanceType: new ec2.InstanceType('t3.small').toString(),
         userData: Fn.base64(userData.render()),
